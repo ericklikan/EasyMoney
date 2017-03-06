@@ -2,12 +2,24 @@
 
 {% block body %}
 {% if all_budgets %}
-<h3>Here are your budgets: </h3>
-<ul>
+<h1><center>Here are your Budgets: </center></h1><br>
   {% for budget in all_budgets %}
-  <li><a href="{% url 'manager:detail' budget.budget_title%}">{{budget.budget_title}} - ${{budget.budget_total}}</a></li>
+  <div class="container">
+    <div class="row">
+      <div class="col-8">
+        <a href = "{% url 'manager:detail' budget.pk %}">
+          <div class="panel panel-default">
+            <div class="panel-heading">{{budget.budget_title}}</div>
+            <div class="panel-body">{{budget.budget_total}}</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-4">
+        <button type="button" name="button">Delete</button>
+      </div>
+    </div>
+  </div>
   {% endfor %}
-</ul>
 
 {% else %}
   <h3>You Dont have any budgets</h3>

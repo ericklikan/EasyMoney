@@ -3,9 +3,13 @@ body{
 }
 
 .navbar{
-  border-radius: : 0;
+  border-radius:0;
 }
 
 .navbar-brand{
   font-family: 'Comfortaa',cursive;
+}
+
+.panel-heading{
+  border-radius: 100
 }

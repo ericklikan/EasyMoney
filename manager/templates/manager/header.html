@@ -41,6 +41,8 @@
           </form>
 
           <ul class="nav navbar-nav navbar-right">
+            {% block section %}
+            {% endblock %}
             <li class="">
               <a href="{% url 'manager:budget-add' %}">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;

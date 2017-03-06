@@ -7,7 +7,14 @@ urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
 
     #/manager/section_title/
-    url(r'^(?P<budget_title>[\w]+)/$',views.DetailView.as_view(), name='detail'),
+    url(r'^(?P<pk>[0-9]+)/$',views.DetailView.as_view(), name='detail'),
 
     url(r'budget/add/$',views.BudgetCreate.as_view(), name='budget-add'),
+
+    url(r'budget/(?P<pk>[0-9]+)/$',views.BudgetUpdate.as_view(), name='budget-update'),
+
+    url(r'budget/(?P<pk>[0-9]+)/delete/$',views.BudgetCreate.as_view(), name='budget-delete'),
+
+    url(r'^register/$', views.UserFormView.as_view(), name='register')
+
 ]
