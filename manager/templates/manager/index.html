@@ -1,0 +1,16 @@
+{% extends 'manager/header.html' %}
+
+{% block body %}
+{% if all_budgets %}
+<h3>Here are your budgets: </h3>
+<ul>
+  {% for budget in all_budgets %}
+  <li><a href="{% url 'manager:detail' budget.budget_title%}">{{budget.budget_title}} - ${{budget.budget_total}}</a></li>
+  {% endfor %}
+</ul>
+
+{% else %}
+  <h3>You Dont have any budgets</h3>
+
+{% endif %}
+{% endblock %}
