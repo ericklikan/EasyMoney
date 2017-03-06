@@ -1,0 +1,2 @@
+# EasyMoney
+Simple Budget Manager
