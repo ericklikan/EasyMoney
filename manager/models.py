@@ -8,7 +8,7 @@ class Budget(models.Model):
     budget_total = models.DecimalField(max_digits=17,decimal_places=2) #Must be >0, up to 1 quadrillion dollars
 
     def get_absolute_url(self):
-        return reverse('manager:detail', kwargs={'budget_id':self.pk})
+        return reverse('manager:detail', kwargs={'budget_id':self.pk,'user':self.user})
 
     def __str__(self):
         return self.budget_title + ': $' + str(self.budget_total)

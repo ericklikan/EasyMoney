@@ -1,5 +1,14 @@
 {% extends 'manager/header.html' %}
-
+{% block user %}
+<ul class="nav navbar-nav">
+  <li class="">
+    <a href="">
+      <span class="" aria-hidden="true"></span>&nbsp;
+      {{user.username}}
+    </a>
+  </li>
+</ul>
+{% endblock %}
 {% block body %}
 {% if budgets %}
 <h1><center>Here are your Budgets: </center></h1><br>

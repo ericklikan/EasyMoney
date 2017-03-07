@@ -8,13 +8,15 @@ from .forms import UserForm
 
 @login_required
 def index(request):
+    user = request.user
     budgets = Budget.objects.filter(user=request.user)
-    return render(request, 'manager/index.html', {'budgets':budgets})
+    return render(request, 'manager/index.html', {'budgets':budgets,'user':user})
 
 @login_required
 def detail(request, budget_id):
+    user = request.user
     budget = get_object_or_404(Budget, pk=budget_id)
-    return render(request, 'manager/detail.html', {'budget':budget})
+    return render(request, 'manager/detail.html', {'budget':budget,'user':user})
 
 '''
 class IndexView(generic.ListView):
