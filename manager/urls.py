@@ -5,7 +5,6 @@ app_name = 'manager'
 urlpatterns = [
     #/manager/
     url(r'^$', views.IndexView.as_view(), name='index'),
-
     #/manager/section_title/
     url(r'^(?P<pk>[0-9]+)/$',views.DetailView.as_view(), name='detail'),
 
@@ -15,6 +14,10 @@ urlpatterns = [
 
     url(r'budget/(?P<pk>[0-9]+)/delete/$',views.BudgetCreate.as_view(), name='budget-delete'),
 
-    url(r'^register/$', views.UserFormView.as_view(), name='register')
+    #Login, Logout, register
+    url(r'^register/$', views.UserFormView.as_view(), name='register'),
 
+    url(r'^login/$',views.UserFormLogin.as_view(), name='login'),
+
+    #url(r'^logout/$',)
 ]
