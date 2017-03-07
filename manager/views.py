@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.views.generic import View
 from django.contrib.auth.decorators import login_required
 from .models import Budget, Section
-from .forms import UserForm, LoginForm
+from .forms import UserForm
 
 
 class IndexView(generic.ListView):
@@ -61,25 +61,3 @@ class UserFormView(View):
                     login(request, user)
                     return redirect('manager:index')
         return render(request, self.template_name, {{'form':form}})
-
-class UserFormLogin(View):
-    form_class = LoginForm
-    template_name = 'manager/login.html'
-
-    def get(self, request):
-        form = self.form_class(None)
-        return render(request, self.template_name, {'form':form})
-
-    def post(self, request):
-
-        form = self.form_class(request.POST)
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return redirect('manager:index')
-        else:
-            return render(request, self.template_name, {'form':form})

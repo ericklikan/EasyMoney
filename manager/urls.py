@@ -1,4 +1,6 @@
 from django.conf.urls import url
+from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from . import views
 app_name = 'manager'
 
@@ -16,8 +18,7 @@ urlpatterns = [
 
     #Login, Logout, register
     url(r'^register/$', views.UserFormView.as_view(), name='register'),
-
-    url(r'^login/$',views.UserFormLogin.as_view(), name='login'),
-
+    url(r'^login/$', auth_views.login, {'template_name':'manager/login.html'} , name='login'),
+    url(r'^logout/$', auth_views.logout, {'next_page':'/login/'}, name='logout'),
     #url(r'^logout/$',)
 ]
