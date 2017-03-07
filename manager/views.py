@@ -1,14 +1,22 @@
-from django.views import generic
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.core.urlresolvers import reverse_lazy
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
-from django.views.generic import View
+from django.views.generic import View, CreateView, ListView, UpdateView, ListView, DeleteView
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse_lazy
 from .models import Budget, Section
 from .forms import UserForm
 
+@login_required
+def index(request):
+    budgets = Budget.objects.filter(user=request.user)
+    return render(request, 'manager/index.html', {'budgets':budgets})
 
+@login_required
+def detail(request, budget_id):
+    budget = get_object_or_404(Budget, pk=budget_id)
+    return render(request, 'manager/detail.html', {'budget':budget})
+
+'''
 class IndexView(generic.ListView):
     template_name = 'manager/index.html'
     context_object_name = 'all_budgets'
@@ -19,7 +27,7 @@ class IndexView(generic.ListView):
 class DetailView(generic.DetailView):
     model = Budget
     template_name = 'manager/detail.html'
-
+'''
 
 class BudgetCreate(CreateView):
     model = Budget

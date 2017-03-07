@@ -1,9 +1,9 @@
 {% extends 'manager/header.html' %}
 
 {% block body %}
-{% if all_budgets %}
+{% if budgets %}
 <h1><center>Here are your Budgets: </center></h1><br>
-  {% for budget in all_budgets %}
+  {% for budget in budgets %}
   <div class="container">
     <div class="row">
       <div class="col-8">
