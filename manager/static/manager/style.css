@@ -13,3 +13,11 @@ body{
 .panel-heading{
   border-radius: 100
 }
+
+.left{
+  position: absolute;
+  left: 0;
+  top: 92px;
+  bottom: 0;
+  width: 250px;
+}

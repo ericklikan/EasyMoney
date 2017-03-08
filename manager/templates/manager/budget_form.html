@@ -1,11 +1,32 @@
 {% extends 'manager/header.html' %}
 
+{% block user %}
+<ul class="nav navbar-nav">
+  <li class="">
+    <a href="">
+      <span class="" aria-hidden="true"></span>&nbsp;
+      {{user.username}}
+    </a>
+  </li>
+</ul>
+{% endblock %}
+
+{% block section %}
+<li class="">
+  <a href="{% url 'manager:logout' %}">
+    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;
+    Logout
+  </a>
+</li>
+{% endblock %}
+
 {% block body %}
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-12 col-md-7">
       <div class="panel panel-default">
         <div class="panel-body">
+          <h3>Add New Budget</h3>
           <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% include 'manager/form-template.html' %}

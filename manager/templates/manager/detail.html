@@ -1,9 +1,60 @@
-
 {% extends 'manager/header.html'%}
+
+{% block user %}
+<ul class="nav navbar-nav">
+  <li class="">
+    <a href="">
+      <span class="" aria-hidden="true"></span>&nbsp;
+      {{user.username}}
+    </a>
+  </li>
+</ul>
+{% endblock %}
+
+{% block section %}
+<li class="">
+  <a href="{% url 'manager:section_create' budget.pk %}">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
+    Add Section
+  </a>
+</li>
+
+<li class="">
+  <a href="{% url 'manager:logout' %}">
+    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;
+    Logout
+  </a>
+</li>
+{% endblock %}
 
 {% block body %}
   <h1>{{budget.budget_title}}</h1>
-  <div class="">
+  {% if sections %}
+  <ul>
+    {% for section in sections %}
+    <li>{{section.section_title}} :: ${{section.section_budget}}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <br>
+  <p>Add Sections:</p>
 
+  <div class="left">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Transactions
+      </div>
+      <div class="panel-body">
+        <ul class="list-group">
+          {% for trans in transactions %}
+            <li class="list-group-item">
+              <span class="badge">{{trans.amount}}</span>
+              {{trans.trans_title}} : {{trans.section}}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+    </div>
   </div>
 {% endblock %}

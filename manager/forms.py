@@ -1,15 +1,18 @@
 from django.contrib.auth.models import User
+from .models import Section, Budget
 from django import forms
 
 class BudgetForm(forms.ModelForm):
 
     class Meta:
+        model = Budget
         fields = ['budget_title','budget_total']
 
-class Section(forms.ModelForm):
+class SectionForm(forms.ModelForm):
 
     class Meta:
-        fields = ['section_title','section_total']
+        model = Section
+        fields = ['section_title','section_budget']
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)

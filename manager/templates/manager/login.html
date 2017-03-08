@@ -1,5 +1,14 @@
 {% extends 'manager/header.html' %}
 
+{% block section %}
+<li class="">
+  <a href="{% url 'manager:register' %}">
+    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;
+    Register
+  </a>
+</li>
+{% endblock %}
+
 {% block body %}
 <div class="container-fluid">
 

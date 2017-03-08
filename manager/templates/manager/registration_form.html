@@ -1,5 +1,12 @@
 {% extends 'manager/header.html' %}
-
+{% block section %}
+<li class="">
+  <a href="{% url 'manager:login' %}">
+    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;
+    Login
+  </a>
+</li>
+{% endblock %}
 {% block body %}
 <div class="container-fluid">
   <div class="row">
