@@ -1,60 +1,71 @@
-{% extends 'manager/header.html'%}
-
-{% block user %}
-<ul class="nav navbar-nav">
-  <li class="">
-    <a href="">
-      <span class="" aria-hidden="true"></span>&nbsp;
-      {{user.username}}
-    </a>
-  </li>
-</ul>
-{% endblock %}
-
-{% block section %}
-<li class="">
-  <a href="{% url 'manager:section_create' budget.pk %}">
-    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
-    Add Section
-  </a>
-</li>
-
-<li class="">
-  <a href="{% url 'manager:logout' %}">
-    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;
-    Logout
-  </a>
-</li>
-{% endblock %}
+{% extends 'manager/header.html' %}
 
 {% block body %}
-  <h1>{{budget.budget_title}}</h1>
-  {% if sections %}
-  <ul>
-    {% for section in sections %}
-    <li>{{section.section_title}} :: ${{section.section_budget}}</li>
-    {% endfor %}
-  </ul>
-  {% endif %}
-  <br>
-  <p>Add Sections:</p>
-
-  <div class="left">
+<div id="wrapper">
+  <!--Sidebar -->
+  <div id="sidebar-wrapper">
     <div class="panel panel-default">
-      <div class="panel-heading">
-        Transactions
-      </div>
-      <div class="panel-body">
-        <ul class="list-group">
-          {% for trans in transactions %}
-            <li class="list-group-item">
-              <span class="badge">{{trans.amount}}</span>
-              {{trans.trans_title}} : {{trans.section}}
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
+              <div class="panel-heading">
+                Transactions
+              </div>
+              <div class="panel-body">
+                <ul class="list-group">
+                  {% for trans in transactions %}
+                    <li class="list-group-item">
+                      <a href="#">
+                      <span class="badge">${{trans.amount}}</span>
+                      <span class="badge">
+                        <span class="glyphicon glyphicon-trash">
+                        </span>
+                      </span>
+                    </a>
+                      <strong>{{trans.trans_title}}</strong> : {{trans.section}}
+                    </li>
+                  {% endfor %}
+                </ul>
 
+                <!-- FORM -->
+                <hr>
+                {% if sections %}
+                <h4><strong>New Transaction:</strong></h4>
+
+                <div class="form-group">
+                  <div class="col-sm-offset-2 col-sm-10">
+                    <span class="text-danger-small">{{ form.errors }}</span>
+                  </div>
+                  <label class="control-label col-sx-2">Transaction Title</label><br>
+                  <div class="col-sm-12">{{ form.trans_title }}</div><br>
+                  <label class="control-label col-sx-2">{{ form.amount.label_tag }}</label>
+                  <div class="col-sm-12">{{ form.amount }}</div><br>
+                  <div class="form-group">
+                    <div class="col-sx-2">
+                      <br><br>
+                      <label class="control-label col-sx-2">Section</label>
+                        <select name="section" class="form-control input-sm">
+                          {% for section in sections %}
+                            <option>{{section.section_title}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                  </div>
+                </div>
+                <!-- END FORM -->
+                {% else %}
+                <h4><strong>Add New Section to make new Transaction</strong></h4>
+                {% endif %}
+              </div>
+
+            </div>
+  </div>
+  <!-- Page Content -->
+  <div id="page-content-wrapper">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <h3>main</h3>
+        </div>
+      </div>
     </div>
   </div>
+</div>
 {% endblock %}

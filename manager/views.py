@@ -3,8 +3,13 @@ from django.contrib.auth import authenticate, login
 from django.views.generic import View, CreateView, ListView, UpdateView, ListView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
+from django.core.exceptions import ValidationError
+
 from .models import Budget, Section, Transaction
-from .forms import UserForm, BudgetForm, SectionForm
+from .forms import UserForm, BudgetForm, SectionForm, TransactionForm
+
+import datetime
+
 
 @login_required
 def index(request):
@@ -16,8 +21,24 @@ def index(request):
 def detail(request, budget_id):
     user = request.user
     budget = get_object_or_404(Budget, pk=budget_id)
-    sections = Section.objects.filter(budget=budget,user=user)
-    return render(request, 'manager/detail.html', {'budget':budget,'user':user,'sections':sections})
+    sections = Section.objects.filter(user=user, budget=budget)
+    transactions = Transaction.objects.filter(user=user,budget=budget)
+    form_class = TransactionForm
+
+    if request.method == 'POST': #Dealing with transaction form
+        form = form_class(request.POST)
+        if form.is_valid():
+            form.user = user
+            form.budget = budget
+            form.trans_datetime = datetime.datetime.now()
+
+            return detail(request,budget.pk)
+
+    if request.method == 'GET':
+        form = form_class(None)
+        return render(request, 'manager/detail.html', {'budget':budget,'user':user,'sections':sections, 'form':form,'transactions':transactions})
+
+
 
 @login_required
 def budget_create(request):
@@ -32,7 +53,7 @@ def budget_create(request):
             budget.user = request.user
             budget.save()
 
-            return detail(request,budget.budget_id)
+            return detail(request,budget.pk)
 
         return render(request, template_name, {'form':form})
     if request.method == 'GET':
@@ -55,19 +76,20 @@ def section_create(request, budget_id):
     sections = Section.objects.filter(budget=budget,user=user)
     total = 0 #Counting total amount of money all the sections have
     for section in sections:
-        total = total + section.section_budget.value()
+        total = total + section.section_budget
     template_name = 'manager/section_form.html'
 
     if request.method == 'POST':
         form = form_class(request.POST)
         if form.is_valid():
-            newSectionAmount = form['section_budget'].value()
+            newSectionAmount = form.cleaned_data['section_budget']
             if newSectionAmount < (budget.budget_total - total):
                 section = form.save(commit=False)
+                section.budget = budget
                 section.user = request.user
                 section.save()
 
-                return detail(request,budget.budget_id)
+                return detail(request,budget.pk)
             else:
                 raise ValidationError('Your sections total to too much!')
         return render(request, template_name, {'form':form})

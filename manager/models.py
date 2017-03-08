@@ -24,6 +24,7 @@ class Section(models.Model):
 class Transaction(models.Model):
     user = models.ForeignKey(User, default=1)
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=17,decimal_places=2) #Can be + or -, , up to 1 quadrillion dollars
     trans_title = models.CharField(max_length=50)
     trans_description = models.CharField(max_length=250)
