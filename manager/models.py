@@ -27,5 +27,4 @@ class Transaction(models.Model):
     budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=17,decimal_places=2) #Can be + or -, , up to 1 quadrillion dollars
     trans_title = models.CharField(max_length=50)
-    trans_description = models.CharField(max_length=250)
     trans_datetime = models.DateTimeField()

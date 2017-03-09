@@ -18,7 +18,7 @@ class TransactionForm(forms.ModelForm):
 
     class Meta:
         model = Transaction
-        fields = ['trans_title','amount','section']
+        fields = ['trans_title','amount']
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)

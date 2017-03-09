@@ -1,24 +1,52 @@
 {% extends 'manager/header.html' %}
+{% block user %}
+<ul class="nav navbar-nav">
+  <li class="">
+    <a href="">
+      <span class="" aria-hidden="true"></span>&nbsp;
+      {{user.username}}
+    </a>
+  </li>
+</ul>
+{% endblock %}
 
+{% block section %}
+<li class="">
+  <a href="{% url 'manager:section_create' budget.pk %}">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
+    Add Section
+  </a>
+</li>
+
+<li class="">
+  <a href="{% url 'manager:logout' %}">
+    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;
+    Logout
+  </a>
+</li>
+{% endblock %}
 {% block body %}
 <div id="wrapper">
   <!--Sidebar -->
   <div id="sidebar-wrapper">
-    <div class="panel panel-default">
-              <div class="panel-heading">
-                Transactions
+    <div class="panel panel-default" id="transactions">
+              <div class="panel-heading"  align="center">
+                <strong>Transactions</strong>
               </div>
               <div class="panel-body">
                 <ul class="list-group">
                   {% for trans in transactions %}
                     <li class="list-group-item">
-                      <a href="#">
+                      {% if trans.amount >= 0 %}
                       <span class="badge">${{trans.amount}}</span>
-                      <span class="badge">
-                        <span class="glyphicon glyphicon-trash">
-                        </span>
-                      </span>
-                    </a>
+                      {% else %}
+                      <span class="badge">-${{trans.amount}}</span>
+                      {% endif %}
+                        <a href="#">
+                          <span class="badge">
+                            <span class="glyphicon glyphicon-trash"></span>
+                          </span>
+                        </a>
                       <strong>{{trans.trans_title}}</strong> : {{trans.section}}
                     </li>
                   {% endfor %}
@@ -28,27 +56,32 @@
                 <hr>
                 {% if sections %}
                 <h4><strong>New Transaction:</strong></h4>
-
-                <div class="form-group">
-                  <div class="col-sm-offset-2 col-sm-10">
-                    <span class="text-danger-small">{{ form.errors }}</span>
-                  </div>
-                  <label class="control-label col-sx-2">Transaction Title</label><br>
-                  <div class="col-sm-12">{{ form.trans_title }}</div><br>
-                  <label class="control-label col-sx-2">{{ form.amount.label_tag }}</label>
-                  <div class="col-sm-12">{{ form.amount }}</div><br>
+                <form class="" action="" method="post">
+                  {% csrf_token %}
                   <div class="form-group">
-                    <div class="col-sx-2">
-                      <br><br>
-                      <label class="control-label col-sx-2">Section</label>
-                        <select name="section" class="form-control input-sm">
-                          {% for section in sections %}
-                            <option>{{section.section_title}}</option>
-                          {% endfor %}
-                        </select>
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <span class="text-danger-small">{{ form.errors }}</span>
+                    </div>
+                    <label class="control-label">Transaction Title</label><br>
+                    <div>{{ form.trans_title }}</div>
+                    <label class="control-label">{{ form.amount.label_tag }}</label>
+                    <div>{{ form.amount }}</div>
+                    <div class="form-group">
+                      <div class="col-sx-2">
+                        <label class="control-label">Section</label>
+                          <select name="section" class="form-control">
+                            {% for section in sections %}
+                              <option>{{section.section_title}}</option>
+                            {% endfor %}
+                          </select>
+                      </div>
+                    </div>
+                    <div>
+                      <button type="submit" class="btn btn-success">Submit</button>
                     </div>
                   </div>
-                </div>
+                </form>
+
                 <!-- END FORM -->
                 {% else %}
                 <h4><strong>Add New Section to make new Transaction</strong></h4>
@@ -62,7 +95,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12">
-          <h3>main</h3>
+          <h2 align="center"><strong>{{budget.budget_title}}</strong></h2>
         </div>
       </div>
     </div>

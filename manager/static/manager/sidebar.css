@@ -1,12 +1,12 @@
 #sidebar-wrapper{
   float: left;
-  width: 300px;
+  width: 280px;
   height: 100%;
   background-color: white;
 }
 
 #page-content-wrapper{
   float: right;
-  width: 80%;
+  width: 85%;
   height: 100%;
 }
