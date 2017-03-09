@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'chartit',
     'manager.apps.ManagerConfig',
     'django.contrib.admin',
     'django.contrib.auth',

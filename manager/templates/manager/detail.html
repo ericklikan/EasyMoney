@@ -1,4 +1,7 @@
 {% extends 'manager/header.html' %}
+
+{% load chartit %}
+
 {% block user %}
 <ul class="nav navbar-nav">
   <li class="">
@@ -92,10 +95,11 @@
   </div>
   <!-- Page Content -->
   <div id="page-content-wrapper">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12">
-          <h2 align="center"><strong>{{budget.budget_title}}</strong></h2>
+    <div class="container">
+      <div class="row" align="right">
+        <h2 align="center"><strong>{{budget.budget_title}}: ${{budget.budget_total}}</strong></h2> <br>
+        <div id="contains_chart">
+          {{ trans_chart|load_charts:"contains_chart"}}
         </div>
       </div>
     </div>

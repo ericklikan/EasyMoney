@@ -7,6 +7,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 
+from chartit import DataPool,Chart
+
 from .models import Budget, Section, Transaction
 from .forms import UserForm, BudgetForm, SectionForm, TransactionForm
 
@@ -61,6 +63,35 @@ def detail(request, budget_id):
     sections = Section.objects.filter(user=user, budget=budget)
     transactions = Transaction.objects.filter(user=user,budget=budget).order_by("-trans_datetime")[:10] #shows max of 10 last transactions
     form_class = TransactionForm
+    #ChartIt DataPool:
+    ###### Chart 1 ######
+    transaction_data= \
+        DataPool(
+            series=
+            [{'options':{
+                'source':Transaction.objects.all()},
+                'terms':[
+                    'trans_datetime',
+                    'amount']}
+            ])
+    trans_chart = Chart(
+        datasource = transaction_data,
+        series_options = [{
+            'options':{
+                'type':'line',
+                'stacking': False},
+            'terms':{
+                'trans_datetime':['amount']
+            }}],
+                chart_options =
+                {
+                'title':{
+                    'text':'Transaction data with time'},
+                'xAxis':{
+                    'title':{
+                        'text':'Time'}}})
+    ###### Chart 2 ######
+
 
     if request.method == 'POST': #Dealing with transaction form
         form = form_class(request.POST)
@@ -72,13 +103,14 @@ def detail(request, budget_id):
             trans.budget = budget
             trans.section = section
             trans.trans_datetime = datetime.datetime.now()
+            trans.day = trans.trans_datetime.day
             trans.save()
 
             return redirect('manager:detail' ,budget_id=budget.pk)
 
     if request.method == 'GET':
         form = form_class(None)
-        return render(request, 'manager/detail.html', {'budget':budget,'user':user,'sections':sections, 'form':form,'transactions':transactions})
+        return render(request, 'manager/detail.html', {'budget':budget,'user':user,'sections':sections, 'form':form,'transactions':transactions,'trans_chart':trans_chart})
 
 @login_required
 def budget_create(request):
