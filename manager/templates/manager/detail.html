@@ -42,7 +42,7 @@
                       {% else %}
                       <span class="badge">-${{trans.amount}}</span>
                       {% endif %}
-                        <a href="#">
+                        <a href="{% url 'manager:trans-delete' trans.pk %}">
                           <span class="badge">
                             <span class="glyphicon glyphicon-trash"></span>
                           </span>

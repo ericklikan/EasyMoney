@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRe
 from django.contrib.auth import authenticate, login
 from django.views.generic import View, CreateView, ListView, UpdateView, ListView, DeleteView
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -26,15 +27,19 @@ def section_create(request, budget_id):
         form = form_class(request.POST)
         if form.is_valid():
             newSectionAmount = form.cleaned_data['section_budget']
-            if newSectionAmount < (budget.budget_total - total):
-                section = form.save(commit=False)
-                section.budget = budget
-                section.user = request.user
-                section.save()
-                return redirect('manager:detail' ,budget_id=budget.pk)
+            if Section.objects.filter(section_title=form.cleaned_data['section_title']).count() == 0:
+                if newSectionAmount <= (budget.budget_total - total):
+                    section = form.save(commit=False)
+                    section.budget = budget
+                    section.user = request.user
+                    section.save()
+                    return redirect('manager:detail' ,budget_id=budget.pk)
+                elif newSectionAmount > (budget.budget_total - total):
+                    messages.add_message(request, messages.INFO, 'Does not add up')
+                    return render(request, template_name, {'form':form})
             else:
-                raise ValidationError('Your sections total to too much!')
-
+                messages.add_message(request, messages.INFO, 'This Already Exists')
+                return render(request, template_name, {'form':form})
         else:
             return render(request, template_name, {'form':form})
 
@@ -54,18 +59,18 @@ def detail(request, budget_id):
     user = request.user
     budget = get_object_or_404(Budget, pk=budget_id)
     sections = Section.objects.filter(user=user, budget=budget)
-    transactions = Transaction.objects.filter(user=user,budget=budget)
+    transactions = Transaction.objects.filter(user=user,budget=budget).order_by("-trans_datetime")[:10] #shows max of 10 last transactions
     form_class = TransactionForm
 
     if request.method == 'POST': #Dealing with transaction form
         form = form_class(request.POST)
         if form.is_valid(): #Handling Transaction Form
-            strTest = 'Food'
-            section = Section.objects.get(user=user, section_title=strTest)
-            trans = Transaction(section=section)
+            sectionStr = str(request.POST.get('section'))
+            section = Section.objects.filter(user=user, section_title=sectionStr)[0]
             trans = form.save(commit=False)
             trans.user = user
             trans.budget = budget
+            trans.section = section
             trans.trans_datetime = datetime.datetime.now()
             trans.save()
 
@@ -101,34 +106,15 @@ def budget_delete(request, pk):
     budget = Budget.objects.filter(user=user, pk=pk)
     budget.delete()
     budgets = Budget.objects.filter(user=user)
-    return render(request, 'manager/index.html', {'user':user,'budgets':budgets})
+    return redirect('manager:index')
 
-
-
-'''
-class IndexView(generic.ListView):
-    template_name = 'manager/index.html'
-    context_object_name = 'all_budgets'
-
-    def get_queryset(self):
-        return Budget.objects.all()
-
-class DetailView(generic.DetailView):
-    model = Budget
-    template_name = 'manager/detail.html'
-'''
-
-class BudgetCreate(CreateView):
-    model = Budget
-    fields = ['budget_title','budget_total']
-
-class BudgetUpdate(UpdateView):
-    model = Section
-    fields = ['section_title','section_budget']
-
-class BudgetDelete(DeleteView):
-    model = Section
-    success_url = reverse_lazy('manager:index')
+@login_required
+def trans_delete(request, pk):
+    user = request.user
+    trans = Transaction.objects.get(user=user, pk=pk)
+    budget_pk = trans.budget.pk
+    trans.delete()
+    return redirect('manager:detail',budget_id=budget_pk)
 
 class UserFormView(View):
     form_class = UserForm
