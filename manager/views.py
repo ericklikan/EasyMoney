@@ -69,7 +69,7 @@ def detail(request, budget_id):
         DataPool(
             series=
             [{'options':{
-                'source':Transaction.objects.all()},
+                'source':transactions},
                 'terms':[
                     'trans_datetime',
                     'amount']}
